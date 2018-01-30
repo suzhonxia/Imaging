@@ -25,6 +25,7 @@ import android.widget.FrameLayout;
 import me.kareluo.imaging.core.IMGImage;
 import me.kareluo.imaging.core.IMGMode;
 import me.kareluo.imaging.core.IMGPath;
+import me.kareluo.imaging.core.IMGStickerImage;
 import me.kareluo.imaging.core.IMGText;
 import me.kareluo.imaging.core.anim.IMGHomingAnimator;
 import me.kareluo.imaging.core.homing.IMGHoming;
@@ -102,6 +103,11 @@ public class IMGView extends FrameLayout implements Runnable, ScaleGestureDetect
         invalidate();
     }
 
+    /**
+     * 设置编辑模式
+     *
+     * @param mode 需要编辑的模式标识:涂鸦、马赛克、裁剪
+     */
     public void setMode(IMGMode mode) {
         // 保存现在的编辑模式
         mPreMode = mImage.getMode();
@@ -311,6 +317,11 @@ public class IMGView extends FrameLayout implements Runnable, ScaleGestureDetect
         }
     }
 
+    /**
+     * 添加文字贴纸
+     *
+     * @param text 添加的文字对象
+     */
     public void addStickerText(IMGText text) {
         IMGStickerTextView textView = new IMGStickerTextView(getContext());
 
@@ -328,6 +339,29 @@ public class IMGView extends FrameLayout implements Runnable, ScaleGestureDetect
         textView.setY(getScrollY());
 
         addStickerView(textView, layoutParams);
+    }
+
+    /**
+     * 添加图片贴纸
+     *
+     * @param image 添加的图片对象
+     */
+    public void addStickerImage(IMGStickerImage image) {
+        IMGStickerImageView imageView = new IMGStickerImageView(getContext());
+
+        imageView.setImage(image);
+
+        LayoutParams layoutParams = new LayoutParams(
+                LayoutParams.WRAP_CONTENT,
+                LayoutParams.WRAP_CONTENT
+        );
+        // Center of the drawing window.
+        layoutParams.gravity = Gravity.CENTER;
+
+        imageView.setX(getScrollX());
+        imageView.setY(getScrollY());
+
+        addStickerView(imageView, layoutParams);
     }
 
     @Override

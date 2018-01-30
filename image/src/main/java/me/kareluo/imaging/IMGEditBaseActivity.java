@@ -9,6 +9,7 @@ import android.widget.RadioGroup;
 import android.widget.ViewSwitcher;
 
 import me.kareluo.imaging.core.IMGMode;
+import me.kareluo.imaging.core.IMGStickerImage;
 import me.kareluo.imaging.core.IMGText;
 import me.kareluo.imaging.view.IMGColorGroup;
 import me.kareluo.imaging.view.IMGView;
@@ -52,7 +53,8 @@ abstract class IMGEditBaseActivity extends Activity implements View.OnClickListe
             initViews();
             mImgView.setImageBitmap(bitmap);
             onCreated();
-        } else finish();
+        } else
+            finish();
     }
 
     public void onCreated() {
@@ -75,27 +77,29 @@ abstract class IMGEditBaseActivity extends Activity implements View.OnClickListe
     @Override
     public void onClick(View v) {
         int vid = v.getId();
-        if (vid == R.id.rb_doodle) {
+        if (vid == R.id.rb_doodle) {// 涂鸦
             onModeClick(IMGMode.DOODLE);
-        } else if (vid == R.id.btn_text) {
+        } else if (vid == R.id.btn_text) {// 添加文字
             onTextModeClick();
-        } else if (vid == R.id.rb_mosaic) {
+        } else if (vid == R.id.btn_image) {// 添加图片
+            onImageModeClick();
+        } else if (vid == R.id.rb_mosaic) {// 打马赛克
             onModeClick(IMGMode.MOSAIC);
-        } else if (vid == R.id.btn_clip) {
+        } else if (vid == R.id.btn_clip) {// 裁剪
             onModeClick(IMGMode.CLIP);
-        } else if (vid == R.id.btn_undo) {
+        } else if (vid == R.id.btn_undo) {// 撤销
             onUndoClick();
-        } else if (vid == R.id.tv_done) {
+        } else if (vid == R.id.tv_done) {// 完成
             onDoneClick();
-        } else if (vid == R.id.tv_cancel) {
+        } else if (vid == R.id.tv_cancel) {// 取消
             onCancelClick();
-        } else if (vid == R.id.ib_clip_cancel) {
+        } else if (vid == R.id.ib_clip_cancel) {// 取消裁剪
             onCancelClipClick();
-        } else if (vid == R.id.ib_clip_done) {
+        } else if (vid == R.id.ib_clip_done) {// 完成裁剪
             onDoneClipClick();
-        } else if (vid == R.id.tv_clip_reset) {
+        } else if (vid == R.id.tv_clip_reset) {// 还原裁剪
             onResetClipClick();
-        } else if (vid == R.id.ib_clip_rotate) {
+        } else if (vid == R.id.ib_clip_rotate) {// 裁剪页面旋转
             onRotateClipClick();
         }
     }
@@ -118,6 +122,9 @@ abstract class IMGEditBaseActivity extends Activity implements View.OnClickListe
         }
     }
 
+    /**
+     * 点击了添加文字的按钮：弹出一个Dialog进行对文字编辑
+     */
     public void onTextModeClick() {
         if (mTextDialog == null) {
             mTextDialog = new IMGTextEditDialog(this, this);
@@ -127,17 +134,37 @@ abstract class IMGEditBaseActivity extends Activity implements View.OnClickListe
         mTextDialog.show();
     }
 
+    /**
+     * 点击了添加图片的按钮：构造一个对象做测试
+     */
+    public void onImageModeClick() {
+        IMGStickerImage image = new IMGStickerImage();
+        image.setResId(R.mipmap.comment);
+
+        onImage(image);
+    }
+
     @Override
     public final void onCheckedChanged(RadioGroup group, int checkedId) {
         onColorChanged(mColorGroup.getCheckColor());
     }
 
+    /**
+     * 根据标识切换页面(默认编辑页面和裁剪页面)
+     *
+     * @param op 0:默认编辑; 1:裁剪页面
+     */
     public void setOpDisplay(int op) {
         if (op >= 0) {
             mOpSwitcher.setDisplayedChild(op);
         }
     }
 
+    /**
+     * 根据标识切换页面(涂鸦颜色选择和马赛克提示语)
+     *
+     * @param opSub 0:涂鸦颜色选择; 1:马赛克提示语
+     */
     public void setOpSubDisplay(int opSub) {
         if (opSub < 0) {
             mLayoutOpSub.setVisibility(View.GONE);
@@ -159,24 +186,57 @@ abstract class IMGEditBaseActivity extends Activity implements View.OnClickListe
 
     public abstract Bitmap getBitmap();
 
+    /**
+     * 点击了功能按钮
+     *
+     * @param mode 点击的那个功能标识
+     */
     public abstract void onModeClick(IMGMode mode);
 
+    /**
+     * 点击了撤销按钮
+     */
     public abstract void onUndoClick();
 
+    /**
+     * 点击了取消按钮
+     */
     public abstract void onCancelClick();
 
+    /**
+     * 点击了完成按钮
+     */
     public abstract void onDoneClick();
 
+    /**
+     * 点击了取消裁剪按钮
+     */
     public abstract void onCancelClipClick();
 
+    /**
+     * 点击了完成裁剪按钮
+     */
     public abstract void onDoneClipClick();
 
+    /**
+     * 点击了还原裁剪按钮
+     */
     public abstract void onResetClipClick();
 
+    /**
+     * 点击了旋转裁剪按钮
+     */
     public abstract void onRotateClipClick();
 
+    /**
+     * 涂鸦画笔颜色变化监听
+     *
+     * @param checkedColor 选中的颜色值
+     */
     public abstract void onColorChanged(int checkedColor);
 
     @Override
     public abstract void onText(IMGText text);
+
+    public abstract void onImage(IMGStickerImage image);
 }

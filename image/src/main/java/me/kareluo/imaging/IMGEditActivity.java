@@ -5,8 +5,11 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.text.TextUtils;
+import android.view.View;
+import android.widget.LinearLayout;
 
 import me.kareluo.imaging.core.IMGMode;
+import me.kareluo.imaging.core.IMGStickerImage;
 import me.kareluo.imaging.core.IMGText;
 import me.kareluo.imaging.core.file.IMGAssetFileDecoder;
 import me.kareluo.imaging.core.file.IMGDecoder;
@@ -36,6 +39,10 @@ public class IMGEditActivity extends IMGEditBaseActivity {
 
     }
 
+    /**
+     * 对传参中的图片Uri进行转换为Bitmap
+     * 其中对宽高进行了同比的缩小
+     */
     @Override
     public Bitmap getBitmap() {
         Intent intent = getIntent();
@@ -94,6 +101,11 @@ public class IMGEditActivity extends IMGEditBaseActivity {
     @Override
     public void onText(IMGText text) {
         mImgView.addStickerText(text);
+    }
+
+    @Override
+    public void onImage(IMGStickerImage image) {
+        mImgView.addStickerImage(image);
     }
 
     @Override
